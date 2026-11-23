@@ -1,0 +1,29 @@
+name: Prueba CI Java Maven
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compilar-y-probar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+      - name: Instalar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Compilar y ejecutar pruebas
+        run: mvn --batch-mode clean verify
+      - name: Guardar JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: prueba-cicd-jar
+          path: target/*.jar
